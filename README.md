@@ -21,6 +21,13 @@ npm i
 node getLatestData.js
 ```
 
+### Request new report for feed
+The feed updates every 10 minutes by default, new report can be requested via
+```
+node requestNewData.js
+```
+
+### Available feeds
 You can also edit the script and replace `contractAddress` with other addresses to get other price feeds.
 
 You can find all available price feeds here: https://openlayer.gitbook.io/openlayer/openoracle/data-types
