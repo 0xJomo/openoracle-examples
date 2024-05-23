@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.9;
 
-import "./BN254.sol";
+import "@eigenlayer-middleware/src/libraries/BN254.sol";
 
 interface IOpenOracleTaskManager {
     // EVENTS
-    event NewTaskCreated(uint32 indexed taskIndex, Task task);
+    event NewTaskCreated(uint32 indexed taskIndex, Task task, bytes taskData);
 
     event TaskResponded(
         Task task,
@@ -72,6 +72,14 @@ interface IOpenOracleTaskManager {
         uint8 taskType,
         uint8 responderThreshold,
         uint96 stakeThreshold
+    ) external;
+
+    // NOTE: this function creates new task.
+    function createNewTaskWithData(
+        uint8 taskType,
+        uint8 responderThreshold,
+        uint96 stakeThreshold,
+        bytes calldata taskData
     ) external;
 
     function respondToTask(

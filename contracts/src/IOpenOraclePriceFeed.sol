@@ -17,6 +17,9 @@ interface IOpenOraclePriceFeed {
     /// @notice Call the task manager to request latest data
     function requestNewReport() external;
 
+    /// @notice Call the task manager to request latest data
+    function requestNewReportWithData(bytes calldata _taskData) external;
+
     /// @notice Saves the latest data from task manager in contract
     function saveLatestData(
         IOpenOracleTaskManager.Task calldata task, 
