@@ -1,10 +1,10 @@
 const { ethers } = require('ethers');
 
-const contractAddress = '0xc4d060D973b4DC80227513d96184dCE866eEb2Cf'; // Gold
-const ownerPrivateKey = '<Insert your own>'
+const contractAddress = '0xB233eE56e57f7eB1B1144b28214Abc74b273d3D5';
+const ownerPrivateKey = '0x14a50447fdefa33d732510cf4008a3282900c3be64c145ff42f633714db8f394'
 
 const rpcEndpoint = 'https://ethereum-holesky-rpc.publicnode.com'
-const contractABI = require('../contracts/abi/OpenOraclePriceFeed.js');
+const contractABI = require('../../contracts/abi/OpenOracleCommonDataFeed.js');
 
 // Example: Create a New Task
 async function requestNewData() {
@@ -13,8 +13,10 @@ async function requestNewData() {
   const contract = new ethers.Contract(contractAddress, contractABI, wallet);
 
   try {
+    const taskType = 1 // Gold
+
     // Call the function
-    await contract.requestNewReport();
+    await contract.requestNewReport(taskType);
 
     console.log('request submitted');
   } catch (error) {

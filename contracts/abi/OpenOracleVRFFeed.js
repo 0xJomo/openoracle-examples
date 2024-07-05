@@ -1,13 +1,49 @@
-const openOraclePriceFeedAbi = [
+const openOracleVRFFeedAbi = [
   {
     "type": "constructor",
     "inputs": [
       {
-        "name": "__openOracleTaskManager",
+        "name": "__openOracleIdenticalAnswerTaskManager",
         "type": "address",
-        "internalType": "contract OpenOracleTaskManager"
+        "internalType": "contract OpenOracleIdenticalAnswerTaskManager"
       }
     ],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "createNewTask",
+    "inputs": [
+      {
+        "name": "taskData",
+        "type": "bytes",
+        "internalType": "bytes"
+      },
+      {
+        "name": "responderThreshold",
+        "type": "uint8",
+        "internalType": "uint8"
+      },
+      {
+        "name": "stakeThreshold",
+        "type": "uint96",
+        "internalType": "uint96"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "createNewTask",
+    "inputs": [
+      {
+        "name": "taskData",
+        "type": "bytes",
+        "internalType": "bytes"
+      }
+    ],
+    "outputs": [],
     "stateMutability": "nonpayable"
   },
   {
@@ -44,14 +80,9 @@ const openOraclePriceFeedAbi = [
     "inputs": [],
     "outputs": [
       {
-        "name": "price",
-        "type": "uint256",
-        "internalType": "uint256"
-      },
-      {
-        "name": "sd",
-        "type": "uint256",
-        "internalType": "uint256"
+        "name": "result",
+        "type": "bytes",
+        "internalType": "bytes"
       },
       {
         "name": "timestamp",
@@ -93,37 +124,22 @@ const openOraclePriceFeedAbi = [
   },
   {
     "type": "function",
-    "name": "requestNewReport",
-    "inputs": [],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
-    "name": "requestNewReportWithData",
-    "inputs": [
-      {
-        "name": "_taskData",
-        "type": "bytes",
-        "internalType": "bytes"
-      }
-    ],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
     "name": "saveLatestData",
     "inputs": [
       {
         "name": "task",
         "type": "tuple",
-        "internalType": "struct IOpenOracleTaskManager.Task",
+        "internalType": "struct IOpenOracleIdenticalAnswerTaskManager.Task",
         "components": [
           {
             "name": "taskType",
             "type": "uint8",
             "internalType": "uint8"
+          },
+          {
+            "name": "taskData",
+            "type": "bytes",
+            "internalType": "bytes"
           },
           {
             "name": "taskCreatedBlock",
@@ -155,34 +171,70 @@ const openOraclePriceFeedAbi = [
       {
         "name": "response",
         "type": "tuple",
-        "internalType": "struct IOpenOracleTaskManager.WeightedTaskResponse",
+        "internalType": "struct IOpenOracleIdenticalAnswerTaskManager.AggregatedTaskResponse",
         "components": [
           {
-            "name": "referenceTaskIndex",
-            "type": "uint32",
-            "internalType": "uint32"
-          },
-          {
-            "name": "result",
-            "type": "uint256",
-            "internalType": "uint256"
-          },
-          {
-            "name": "sd",
-            "type": "uint256",
-            "internalType": "uint256"
+            "name": "msg",
+            "type": "tuple",
+            "internalType": "struct IOpenOracleIdenticalAnswerTaskManager.AggregatedMsg",
+            "components": [
+              {
+                "name": "referenceTaskIndex",
+                "type": "uint32",
+                "internalType": "uint32"
+              },
+              {
+                "name": "result",
+                "type": "bytes",
+                "internalType": "bytes"
+              }
+            ]
           },
           {
             "name": "timestamp",
             "type": "uint256",
             "internalType": "uint256"
+          },
+          {
+            "name": "aggregatedSignature",
+            "type": "tuple",
+            "internalType": "struct BN254.G1Point",
+            "components": [
+              {
+                "name": "X",
+                "type": "uint256",
+                "internalType": "uint256"
+              },
+              {
+                "name": "Y",
+                "type": "uint256",
+                "internalType": "uint256"
+              }
+            ]
+          },
+          {
+            "name": "apkG2",
+            "type": "tuple",
+            "internalType": "struct BN254.G2Point",
+            "components": [
+              {
+                "name": "X",
+                "type": "uint256[2]",
+                "internalType": "uint256[2]"
+              },
+              {
+                "name": "Y",
+                "type": "uint256[2]",
+                "internalType": "uint256[2]"
+              }
+            ]
           }
         ]
       },
       {
         "name": "metadata",
         "type": "tuple",
-        "internalType": "struct IOpenOracleTaskManager.TaskResponseMetadata",
+        "internalType": "struct IOpenOracleIdenticalAnswerTaskManager.TaskResponseMetadata",
         "components": [
           {
             "name": "taskResponsedBlock",
@@ -241,7 +293,7 @@ const openOraclePriceFeedAbi = [
   },
   {
     "type": "event",
-    "name": "NewPriceReported",
+    "name": "NewIdenticalAnswerReported",
     "inputs": [
       {
         "name": "taskType",
@@ -256,16 +308,10 @@ const openOraclePriceFeedAbi = [
         "internalType": "uint32"
       },
       {
-        "name": "price",
-        "type": "uint256",
+        "name": "result",
+        "type": "bytes",
         "indexed": false,
-        "internalType": "uint256"
-      },
-      {
-        "name": "sd",
-        "type": "uint256",
-        "indexed": false,
-        "internalType": "uint256"
+        "internalType": "bytes"
       },
       {
         "name": "timestamp",
@@ -309,4 +355,4 @@ const openOraclePriceFeedAbi = [
   }
 ]
 
-module.exports = openOraclePriceFeedAbi;
+module.exports = openOracleVRFFeedAbi;
