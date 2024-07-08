@@ -3,13 +3,13 @@ pragma solidity ^0.8.9;
 
 import "./BN254.sol";
 
-interface IOpenOracleTaskManager {
+interface IOpenOracleIdenticalAnswerTaskManager {
     // EVENTS
-    event NewTaskCreated(uint32 indexed taskIndex, Task task, bytes taskData);
+    event NewIdenticalAnswerTaskCreated(uint32 indexed taskIndex, Task task);
 
     event TaskResponded(
         Task task,
-        WeightedTaskResponse taskResponse,
+        AggregatedTaskResponse taskResponse,
         TaskResponseMetadata taskResponseMetadata
     );
 
@@ -26,6 +26,7 @@ interface IOpenOracleTaskManager {
     // STRUCTS
     struct Task {
         uint8 taskType;
+        bytes taskData;
         uint32 taskCreatedBlock;
         uint8 responderThreshold;
         uint96 stakeThreshold;
@@ -33,32 +34,16 @@ interface IOpenOracleTaskManager {
         uint creationFee;
     }
 
-    // Task response is hashed and signed by operators.
-    // these signatures are aggregated and sent to the contract as response.
-    struct TaskResponse {
-        // Can be obtained by the operator from the event NewTaskCreated.
+    struct AggregatedMsg {
         uint32 referenceTaskIndex;
-        // This is just the response that the operator has to compute by itself.
         bytes result;
-        // This is just the response that the operator has to compute by itself.
-        uint256 timestamp;
     }
 
-    struct OperatorResponse {
-        address operator;
-        TaskResponse response;
-        bytes signature;
-    }
-
-    struct WeightedTaskResponse {
-        // Can be obtained by the operator from the event NewTaskCreated.
-        uint32 referenceTaskIndex;
-        // Weighted result from operator responses
-        bytes result;
-        // Standard deviation for weighted result
-        uint256 sd;
-        // Timestamp for result
+    struct AggregatedTaskResponse {
+        AggregatedMsg msg;
         uint256 timestamp;
+        BN254.G1Point aggregatedSignature;
+        BN254.G2Point apkG2;
     }
 
     // Extra information related to taskResponse, which is filled inside the contract.
@@ -70,22 +55,15 @@ interface IOpenOracleTaskManager {
     // NOTE: this function creates new task.
     function createNewTask(
         uint8 taskType,
+        bytes calldata taskData,
         uint8 responderThreshold,
         uint96 stakeThreshold
     ) external;
 
-    // NOTE: this function creates new task.
-    function createNewTaskWithData(
-        uint8 taskType,
-        uint8 responderThreshold,
-        uint96 stakeThreshold,
-        bytes calldata taskData
-    ) external;
-
     function respondToTask(
         Task calldata task,
-        OperatorResponse[] calldata responses,
-        WeightedTaskResponse calldata weightedTaskResponse
+        address[] calldata operators,
+        AggregatedTaskResponse calldata response
     ) external;
 
         // Function to add an address to the feed list
