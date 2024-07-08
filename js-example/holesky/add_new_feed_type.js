@@ -5,11 +5,18 @@ async function addFeedConfig() {
   try {
 
     const requestBody = {
-      "TestCoinRankFeed": {
-        "url": "https://3rdparty-apis.coinmarketcap.com/v1/cryptocurrency/contract?address=0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      "MostRecentPowerballDraw": {
+        "url": "https://www.calottery.com/api/DrawGameApi/DrawGamePastDrawResults/12/1/20",
         "path": [
-          "data rank",
-          "status elapsed"
+          "MostRecentDraw DrawNumber",
+          "MostRecentDraw DrawDate",
+          "MostRecentDraw JackpotAmount",
+          "MostRecentDraw WinningNumbers 0 Number",
+          "MostRecentDraw WinningNumbers 1 Number",
+          "MostRecentDraw WinningNumbers 2 Number",
+          "MostRecentDraw WinningNumbers 3 Number",
+          "MostRecentDraw WinningNumbers 4 Number",
+          "MostRecentDraw WinningNumbers 5 Number",
         ]
       }
     }
