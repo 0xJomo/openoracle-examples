@@ -1,4 +1,5 @@
 const { ethers } = require('ethers');
+const { parseHexString } = require('../utils.js')
 
 const contractAddress = '0xB233eE56e57f7eB1B1144b28214Abc74b273d3D5';
 
