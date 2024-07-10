@@ -1,7 +1,7 @@
 const { ethers } = require('ethers');
 
-const rpcEndpoint = 'https://ethereum-holesky-rpc.publicnode.com'
-const contractAddress = '0x298e55eDe8AE5fD1Ec68DFce867D6D77b4EEA8c5';
+const rpcEndpoint = 'https://rpc.camp-network-testnet.gelato.digital'
+const contractAddress = '0x2ea329336246e89BFF5bB87E6dCc74EBe9d2b039';
 
 // The ABI for your contract (simplified for this example)
 const contractABI = require('../../contracts/abi/OpenOracleVRFFeed.js');
@@ -17,7 +17,7 @@ async function createNewTask() {
   const contract = new ethers.Contract(contractAddress, contractABI, wallet);
 
   try {
-    const vrfSeed = 12345678
+    const vrfSeed = 123456789
     // Call the function
     const taskData = ethers.utils.solidityPack(["uint64"],[vrfSeed])
     await contract["createNewTask(bytes,uint8,uint96)"](taskData, 0, 0);

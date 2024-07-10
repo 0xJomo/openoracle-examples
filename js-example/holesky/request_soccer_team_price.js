@@ -1,7 +1,7 @@
 const { ethers } = require('ethers');
 
 const contractAddress = '0xB233eE56e57f7eB1B1144b28214Abc74b273d3D5';
-const ownerPrivateKey = '0x14a50447fdefa33d732510cf4008a3282900c3be64c145ff42f633714db8f394'
+const ownerPrivateKey = 'd4abb0b9f0481d61dacd947b8d8a7238928ee1db211e2cd2417d8e819433504f'
 
 const rpcEndpoint = 'https://ethereum-holesky-rpc.publicnode.com'
 const contractABI = require('../../contracts/abi/OpenOracleCommonDataFeed.js');

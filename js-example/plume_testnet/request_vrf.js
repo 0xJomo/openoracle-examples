@@ -8,7 +8,7 @@ const contractABI = require('../../contracts/abi/OpenOracleVRFFeed.js');
 
 // The account address that will interact with the contract
 // const ownerPrivateKey = 'ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80'
-const ownerPrivateKey = '57025ef2fe1f160216b3207011d6c688395461e8bd81bbb9d58c5b990581795f'
+const ownerPrivateKey = 'd4abb0b9f0481d61dacd947b8d8a7238928ee1db211e2cd2417d8e819433504f'
 
 // Example: Create a New Task
 async function createNewTask() {
