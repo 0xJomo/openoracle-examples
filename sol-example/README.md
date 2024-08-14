@@ -1,66 +1,47 @@
-## Foundry
+## Solidity Examples
 
-**Foundry is a blazing fast, portable and modular toolkit for Ethereum application development written in Rust.**
+Under src and test you will find examples on how to consume different OpenLayer datafeeds inside a smart contract. There are further examples being baked, check them out soon...
 
-Foundry consists of:
+> These examples leverage the Foundry framework. For more instructions please refer to: https://book.getfoundry.sh/
 
--   **Forge**: Ethereum testing framework (like Truffle, Hardhat and DappTools).
--   **Cast**: Swiss army knife for interacting with EVM smart contracts, sending transactions and getting chain data.
--   **Anvil**: Local Ethereum node, akin to Ganache, Hardhat Network.
--   **Chisel**: Fast, utilitarian, and verbose solidity REPL.
-
-## Documentation
-
-https://book.getfoundry.sh/
-
-## Usage
-
-### Build
-
+### To install Foundry
 ```shell
-$ forge build
+# first run
+curl -L https://foundry.paradigm.xyz | bash
+
+# then run
+foundryup
 ```
 
-### Test
+### To test and see fetched prices
 
 ```shell
-$ forge test
+$ forge test -vv
 ```
 
-### Format
-
+If it went smoothly you will be greeted with:
 ```shell
-$ forge fmt
-```
+[⠢] Compiling...
+[⠰] Compiling 5 files with 0.8.12
+[⠒] Solc 0.8.12 finished in 1.18s
+Compiler run successful!
 
-### Gas Snapshots
+Ran 3 tests for test/ConsumerTests.t.sol:ConsumerTests
+[PASS] testGenericPriceConsumer() (gas: 57237)
+Logs:
+  Silver price: 2790
+  Platinum price: 94494
 
-```shell
-$ forge snapshot
-```
+[PASS] testGoldPriceConsumer() (gas: 38995)
+Logs:
+  Gold price: 149695
 
-### Anvil
+[PASS] testSoccerPointsConsumer() (gas: 38318)
+Logs:
+  Points: 72
 
-```shell
-$ anvil
-```
+Suite result: ok. 3 passed; 0 failed; 0 skipped; finished in 7.12s (9.54s CPU time)
 
-### Deploy
+Ran 1 test suite in 7.14s (7.12s CPU time): 3 tests passed, 0 failed, 0 skipped (3 total tests)
 
-```shell
-$ forge script script/Counter.s.sol:CounterScript --rpc-url <your_rpc_url> --private-key <your_private_key>
-```
-
-### Cast
-
-```shell
-$ cast <subcommand>
-```
-
-### Help
-
-```shell
-$ forge --help
-$ anvil --help
-$ cast --help
 ```
