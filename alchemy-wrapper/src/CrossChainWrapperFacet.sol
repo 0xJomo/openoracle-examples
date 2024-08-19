@@ -30,7 +30,8 @@ contract CrossChainWrapperFacet {
 
     function request(CallRequest calldata _callRequest) external returns (bytes32 taskId) {
         LibDiamond.DiamondStorage storage ds = LibDiamond.diamondStorage();
-        taskId = keccak256(abi.encode(msg.sender, _callRequest.functionData));
+        taskId = keccak256(abi.encode(msg.sender, ds.userTaskCounter[msg.sender]));
+        ds.userTaskCounter[msg.sender]++;
         ds.alchemyCallNode.requestNewReportWithData(17, abi.encode(_callRequest.chainId, _callRequest.contractAddress, _callRequest.functionData));
         ds.taskIdToRequests[taskId] = _callRequest;
     }

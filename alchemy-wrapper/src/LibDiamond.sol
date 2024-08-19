@@ -46,6 +46,7 @@ library LibDiamond {
         address contractOwner;
 
         // Custom fields for CrossChainWrapperFacet
+        mapping(address => uint256) userTaskCounter;
         mapping(bytes32 => CrossChainWrapperFacet.CallRequest) taskIdToRequests;
         mapping(bytes32 => CrossChainWrapperFacet.CallResponse) taskIdToResponses;
         IOpenOracleCommonDataFeed alchemyCallNode;

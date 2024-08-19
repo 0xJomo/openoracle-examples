@@ -9,21 +9,16 @@ import "./CrossChainWrapperFacet.sol";
 contract AaveDecodingFacet {
 
     function getAaveMainnetWBTCLendingRate(bytes32 taskId, uint256 _maxResponseAge) external view returns (uint128 currentBorrowRate) {        
-        // Use the same taskId calculation method as in CrossChainWrapperFacet
-        taskId = keccak256(abi.encode(msg.sender, abi.encodeWithSignature("getReserveData()")));
         bytes memory response = CrossChainWrapperFacet(address(this)).get_hex_response(taskId, _maxResponseAge);
         (, , , currentBorrowRate, , , ,) = abi.decode(response, (uint256, uint128, uint128, uint128, uint128, uint128, uint128, uint128));
     }
 
     function getAaveArbitrumWBTCLendingRate(bytes32 taskId, uint256 _maxResponseAge) external view returns (uint128 currentBorrowRate) {        
-        // Use the same taskId calculation method as in CrossChainWrapperFacet
-        taskId = keccak256(abi.encode(msg.sender, abi.encodeWithSignature("getReserveData()")));
         bytes memory response = CrossChainWrapperFacet(address(this)).get_hex_response(taskId, _maxResponseAge);
         (, , , currentBorrowRate, , , ,) = abi.decode(response, (uint256, uint128, uint128, uint128, uint128, uint128, uint128, uint128));
     }
 
     function getAaveUSDCLendingRate(bytes32 taskId, uint256 _maxResponseAge) external view returns (uint128 currentBorrowRate) {
-        taskId = keccak256(abi.encode(msg.sender, abi.encodeWithSignature("getReserveData()")));
         bytes memory response = CrossChainWrapperFacet(address(this)).get_hex_response(taskId, _maxResponseAge);
         (, , , currentBorrowRate, , , ,) = abi.decode(response, (uint256, uint128, uint128, uint128, uint128, uint128, uint128, uint128));
     }
