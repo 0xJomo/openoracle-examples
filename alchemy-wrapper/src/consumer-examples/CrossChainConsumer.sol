@@ -1,9 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.9;
 
-import "./Diamond.sol";
-import "./LibDiamond.sol";
-import "./CrossChainWrapperFacet.sol";
+import "../Diamond.sol";
+import "../CrossChainWrapperFacet.sol";
 
 contract MockConsumer {
     Diamond public openOracleCrossChainWrapper;
