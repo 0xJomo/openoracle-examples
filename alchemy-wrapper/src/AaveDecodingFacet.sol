@@ -6,7 +6,7 @@ import "./CrossChainWrapperFacet.sol";
 
 // Diamond reminder: as facets are an extension of the diamond, they have the "same address" and can share storage slots
 
-contract AAveDecodingFacet {
+contract AaveDecodingFacet {
 
     function getAaveWBTCLendingRate(bytes32 taskId, uint256 _maxResponseAge) external view returns (uint128 currentBorrowRate) {        
         // Use the same taskId calculation method as in CrossChainWrapperFacet
