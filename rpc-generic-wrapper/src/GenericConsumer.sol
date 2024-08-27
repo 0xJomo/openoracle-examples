@@ -4,10 +4,10 @@ pragma solidity ^0.8.9;
 import {GenericRPCWrapper} from "./GenericRPCWrapper.sol";
 
 contract MockConsumer {
-    GenericRPCWrapper public openOracleCrossChainWrapper;
+    GenericRPCWrapper public openOracleGenericRPCWrapper;
     
     constructor(address _wrapperAddress) {
-        openOracleCrossChainWrapper = GenericRPCWrapper(_wrapperAddress);
+        openOracleGenericRPCWrapper = GenericRPCWrapper(_wrapperAddress);
     }
 
     function createCrossChainRequest(
@@ -15,8 +15,8 @@ contract MockConsumer {
         address _contractAddress,
         bytes memory _functionData
     ) external returns (bytes32 taskId) {
-        // Call the request function from CrossChainWrapper
-        taskId = openOracleCrossChainWrapper.request(
+        // request from GenericRPCWrapper
+        taskId = openOracleGenericRPCWrapper.request(
             GenericRPCWrapper.CallRequest({
                 chainId: _chainId,
                 contractAddress: _contractAddress,
@@ -26,7 +26,7 @@ contract MockConsumer {
     }
 
     function getCrossChainResponse(bytes32 _taskId, uint256 _maxResponseAge) external view returns (bytes memory response) {
-        // Call the get_hex_response function from CrossChainWrapperFacet
-        return openOracleCrossChainWrapper.get_hex_response(_taskId, _maxResponseAge);
+        // get_hex_response from GenericRPCWrapperFacet
+        return openOracleGenericRPCWrapper.get_hex_response(_taskId, _maxResponseAge);
     }
 }
