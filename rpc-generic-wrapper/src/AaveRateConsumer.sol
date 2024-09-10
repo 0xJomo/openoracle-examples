@@ -6,19 +6,20 @@ import {GenericRPCWrapper} from "./GenericRPCWrapper.sol";
 contract AaveRateConsumer {
     GenericRPCWrapper public openOracleGenericRPCWrapper;
     
-    bytes32[] public mainnetTaskIds;
-    bytes32[] public arbitrumTaskIds;
-    bytes32[] public optimismTaskIds;
+    uint256[] public mainnetRequestIds;
+    uint256[] public arbitrumRequestIds;
+    uint256[] public optimismRequestIds;
 
-    mapping(bytes32 => bool) public taskIdHasResponse;
+    mapping(uint256 => bool) public requestIdHasResponse;
 
     constructor(address _wrapperAddress) {
         openOracleGenericRPCWrapper = GenericRPCWrapper(_wrapperAddress);
     }
 
-    function requestAaveRates() external returns (bytes32 mainnetTaskId, bytes32 arbitrumTaskId, bytes32 optimismTaskId) {
-        // request mainnet aave USDC variable borrow rate
-        mainnetTaskId = openOracleGenericRPCWrapper.request(
+    // Function to request Aave rates across different chains
+    function requestAaveRates() external returns (uint256 mainnetRequestId, uint256 arbitrumRequestId, uint256 optimismRequestId) {
+        // Request mainnet Aave USDC variable borrow rate
+        mainnetRequestId = openOracleGenericRPCWrapper.request(
             GenericRPCWrapper.CallRequest({
                 chainId: 1,
                 contractAddress: 0x87870Bca3F3fD6335C3F4ce8392D69350B4fA4E2,
@@ -26,10 +27,10 @@ contract AaveRateConsumer {
             })
         );
 
-        mainnetTaskIds.push(mainnetTaskId);
+        mainnetRequestIds.push(mainnetRequestId);
 
-        // request arbitrum aave USDC variable borrow rate
-        arbitrumTaskId = openOracleGenericRPCWrapper.request(
+        // Request Arbitrum Aave USDC variable borrow rate
+        arbitrumRequestId = openOracleGenericRPCWrapper.request(
             GenericRPCWrapper.CallRequest({
                 chainId: 42161,
                 contractAddress: 0x794a61358D6845594F94dc1DB02A252b5b4814aD,
@@ -37,10 +38,10 @@ contract AaveRateConsumer {
             })
         );
 
-        arbitrumTaskIds.push(arbitrumTaskId);
+        arbitrumRequestIds.push(arbitrumRequestId);
 
-        // request optimism aave USDC variable borrow rate
-        optimismTaskId = openOracleGenericRPCWrapper.request(
+        // Request Optimism Aave USDC variable borrow rate
+        optimismRequestId = openOracleGenericRPCWrapper.request(
             GenericRPCWrapper.CallRequest({
                 chainId: 10,
                 contractAddress: 0x794a61358D6845594F94dc1DB02A252b5b4814aD,
@@ -48,30 +49,42 @@ contract AaveRateConsumer {
             })
         );
 
-        optimismTaskIds.push(optimismTaskId);
+        optimismRequestIds.push(optimismRequestId);
     }
 
-    function aggregateRates() external {
-        for(uint i = mainnetTaskIds.length - 1; i >= 0; i--) {
-            bytes32 mainnetTask = mainnetTaskIds[i];
-            if(taskIdHasResponse[mainnetTask]) {
-                bytes memory response = openOracleGenericRPCWrapper.get_hex_response(mainnetTask, 1 days);
+    // Function to aggregate rates across different chains
+    function aggregateRates() external view returns (uint256) {
+        uint256 totalRate;
+        uint256 validResponses = 0;
+
+        for (uint i = 0; i < mainnetRequestIds.length; i++) {
+            uint256 mainnetRequest = mainnetRequestIds[i];
+            if (requestIdHasResponse[mainnetRequest]) {
+                bytes memory response = openOracleGenericRPCWrapper.get_hex_response(mainnetRequest, 1 days);
                 uint256 mainnetRate = abi.decode(response, (,,,,uint128,,,,,,,,,));
+                totalRate += mainnetRate;
+                validResponses++;
             }
 
-            bytes32 arbitrumTask = arbitrumTaskIds[i];
-            if(taskIdHasResponse[arbitrumTask]) {
-                bytes memory response = openOracleGenericRPCWrapper.get_hex_response(arbitrumTask, 1 days);
+            uint256 arbitrumRequest = arbitrumRequestIds[i];
+            if (requestIdHasResponse[arbitrumRequest]) {
+                bytes memory response = openOracleGenericRPCWrapper.get_hex_response(arbitrumRequest, 1 days);
                 uint256 arbitrumRate = abi.decode(response, (,,,,uint128,,,,,,,,,));
+                totalRate += arbitrumRate;
+                validResponses++;
             }
 
-            bytes32 optimismTask = optimismTaskIds[i];
-            if(taskIdHasResponse[optimismTask]) {
-                bytes memory response = openOracleGenericRPCWrapper.get_hex_response(optimismTask, 1 days);
+            uint256 optimismRequest = optimismRequestIds[i];
+            if (requestIdHasResponse[optimismRequest]) {
+                bytes memory response = openOracleGenericRPCWrapper.get_hex_response(optimismRequest, 1 days);
                 uint256 optimismRate = abi.decode(response, (,,,,uint128,,,,,,,,,));
+                totalRate += optimismRate;
+                validResponses++;
             }
         }
 
-        return (mainnetRate, arbitrumRate, optimismRate)/3;
+        require(validResponses > 0, "No valid responses received");
+
+        return totalRate / validResponses;
     }
 }

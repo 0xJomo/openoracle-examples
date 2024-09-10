@@ -14,9 +14,9 @@ contract MockConsumer {
         uint256 _chainId,
         address _contractAddress,
         bytes memory _functionData
-    ) external returns (bytes32 taskId) {
+    ) external returns (bytes32 requestId) {
         // request from GenericRPCWrapper
-        taskId = openOracleGenericRPCWrapper.request(
+        requestId = openOracleGenericRPCWrapper.request(
             GenericRPCWrapper.CallRequest({
                 chainId: _chainId,
                 contractAddress: _contractAddress,
@@ -25,8 +25,8 @@ contract MockConsumer {
         );
     }
 
-    function getCrossChainResponse(bytes32 _taskId, uint256 _maxResponseAge) external view returns (bytes memory response) {
+    function getCrossChainResponse(bytes32 _requestId, uint256 _maxResponseAge) external view returns (bytes memory response) {
         // get_hex_response from GenericRPCWrapperFacet
-        return openOracleGenericRPCWrapper.get_hex_response(_taskId, _maxResponseAge);
+        return openOracleGenericRPCWrapper.get_hex_response(_requestId, _maxResponseAge);
     }
 }
