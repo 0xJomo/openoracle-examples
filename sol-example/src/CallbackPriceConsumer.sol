@@ -15,6 +15,11 @@ contract CallbackPriceConsumer {
 
     uint256 public maxPriceAge = 1 days;
 
+    modifier onlyFeed() {
+        require(msg.sender == address(dataFeed), "Only feed can call this function");
+        _;
+    }
+
     constructor(address _dataFeed, uint8 _taskType) {
         dataFeed = IOpenOracleCommonDataFeed(_dataFeed);
         taskType = _taskType;
@@ -47,7 +52,7 @@ contract CallbackPriceConsumer {
         uint256 requestId,       // requestId being responded
         bytes memory hex_result, // result in hex bytes
         bytes memory             
-    ) external {
+    ) external onlyFeed{
         uint256 price = OpenBytesLib.hexToDec(hex_result);
         priceRequestResult[requestId] = price;
     }

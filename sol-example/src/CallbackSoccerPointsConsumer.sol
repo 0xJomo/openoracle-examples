@@ -15,6 +15,11 @@ contract CallbackSoccerPointsConsumer {
 
     uint256 public maxPointsAge = 1 days;
 
+    modifier onlyFeed() {
+        require(msg.sender == address(dataFeed), "Only feed can call this function");
+        _;
+    }
+
     constructor(address _dataFeed) {
         dataFeed = IOpenOracleCommonDataFeed(_dataFeed);
     }
@@ -59,7 +64,7 @@ contract CallbackSoccerPointsConsumer {
         uint256 requestId,       // requestId being responded
         bytes memory hex_result, // result in hex bytes
         bytes memory             // extra data, if any
-    ) external {
+    ) external onlyFeed{
         uint256 points = OpenBytesLib.hexToDec(hex_result);
         pointsRequestResult[requestId] = points;
         requestResponded[requestId] = true; // Mark the request as responded
