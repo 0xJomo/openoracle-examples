@@ -2,25 +2,26 @@
 pragma solidity ^0.8.9;
 
 import {console, Test} from "forge-std/Test.sol";
-import {GenericPriceConsumer} from "src/GenericPriceConsumer.sol";
-import {GoldPriceConsumer} from "src/GoldPriceConsumer.sol";
-import {SoccerPointsConsumer} from "src/SoccerPointsConsumer.sol";
+import {GenericPriceConsumer} from "../src/GenericPriceConsumer.sol";
+import {GoldPriceConsumer} from "../src/GoldPriceConsumer.sol";
+import {SoccerPointsConsumer} from "../src/SoccerPointsConsumer.sol";
+import {CallbackPriceConsumer} from "../src/CallbackPriceConsumer.sol";  
 
 contract ConsumerTests is Test {
     address public user = address(bytes20("user"));
 
     GenericPriceConsumer genericPriceConsumer;
-    GoldPriceConsumer goldPriceConsumer;
+    CallbackPriceConsumer callbackPriceConsumer; 
     SoccerPointsConsumer soccerPointsConsumer;
 
     function setUp() public {
-        // Fork Holesky
+        // Fork Holesky (Ethereum testnet)
         vm.createSelectFork(vm.rpcUrl("holesky"));
 
-        address dataFeed = 0xB233eE56e57f7eB1B1144b28214Abc74b273d3D5;
+        address dataFeed = 0xB233eE56e57f7eB1B1144b28214Abc74b273d3D5;  
 
         genericPriceConsumer = new GenericPriceConsumer(dataFeed);
-        goldPriceConsumer = new GoldPriceConsumer(dataFeed);
+        callbackPriceConsumer = new CallbackPriceConsumer(dataFeed, 1); // set a Gold callback feed
         soccerPointsConsumer = new SoccerPointsConsumer(dataFeed);
     }
 
@@ -44,16 +45,16 @@ contract ConsumerTests is Test {
         //genericPriceConsumer.updatePrice(3);
     }
 
-    function testGoldPriceConsumer() public view {
-        // Fetching gold price
-        uint256 goldPrice = goldPriceConsumer.getGoldPrice(365 days);
-        console.log("Gold price: %d", goldPrice);
-        if (goldPrice == 0) {
+    function testCallbackPriceConsumer() public {
+        // Fetching the latest gold price from CallbackPriceConsumer
+        uint256 latestPrice = callbackPriceConsumer.getLatestPrice();
+        console.log("Latest price from CallbackPriceConsumer: %d", latestPrice);
+        if (latestPrice == 0) {
             revert("Invalid Price");
         }
 
-        // Updating gold price won't work on a forked network
-        //goldPriceConsumer.updateGoldPrice();
+        // Updating the price in CallbackPriceConsumer won't work on a forked network
+        //callbackPriceConsumer.updatePrice();
     }
 
     function testSoccerPointsConsumer() public view {
