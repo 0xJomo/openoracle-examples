@@ -2,8 +2,8 @@
 pragma solidity ^0.8.0;
 
 import {ITrap} from "drosera-contracts/interfaces/ITrap.sol";
-import "../IOpenOracleCommonDataFeed.sol";
-import "../library/BytesLib.sol";
+import "./IOpenOracleCommonDataFeed.sol";
+import "./BytesLib.sol";
 
 contract DOPTrap is ITrap {
 
